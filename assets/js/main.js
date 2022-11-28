@@ -1,108 +1,208 @@
-// Scrollspy
-var spy = new Gumshoe('#nav  a');
-// Burger
-   $('.burger').on('click', function (event) {
-        $(this).toggleClass('open');
-        $('.navigation-bar').toggleClass('show');
-    })
+/*==================== MENU SHOW Y HIDDEN ====================*/
+const navMenu = document.getElementById('nav-menu'),
+      navToggle = document.getElementById('nav-toggle'),
+      navClose = document.getElementById('nav-close')
 
-    // Darkmode
-    $('.darkmode-btn').on('click', function (event) {
-        $('body').toggleClass('darkmode');
-    })
+/*===== MENU SHOW =====*/
+/* Validate if constant exists */
+if (navToggle) {
+   navToggle.addEventListener('click', () =>{
+     navMenu.classList.add('show_menu')
+   }) 
+}
 
-    // modal
-    $('.btn-view').on('click', function (event) {
-        $('.modal-container').addClass('active');
+/*===== MENU HIDDEN =====*/
+/* Validate if constant exists */
+if (navClose) {
+    navClose.addEventListener('click', ()=> {
+        navMenu.classList.remove('show_menu')
     })
-    $('.close-modal').on('click', function(event){
-        $('.modal-container').removeClass('active');
-    })
+}
 
-// Sticky navbar
-$(document).ready(function(){
-	$(window).bind('scroll', function() {
-		var navHeight = $('header').height();
-		if ($(window).scrollTop() > navHeight) {
-			$('header').addClass('fixed');
-		 }
-		else {
-			$('header').removeClass('fixed');
-		 }
-	});
-});
-// Scroll to TOP
-var btn = $('.scrollup');
-$(window).scroll(function() {
-  if ($(window).scrollTop() > 500) {
-    btn.addClass('show');
-  } else {
-    btn.removeClass('show');
+
+/*==================== REMOVE MENU MOBILE ====================*/
+const navLink = document.querySelectorAll('.nav_link')
+
+function linkAction(){
+    const navMenu = document.getElementById('.nav_menu')
+    navMenu.classList.remove(show_menu)
+}
+navLink.forEach(n => n.addEventListener('click', linkAction))
+
+/*==================== ACCORDION SKILLS ====================*/
+const skillsContent = document.getElementsByClassName('skills_content'),
+      skillsHeader = document.querySelectorAll('.skills_header')
+
+function toggleSkills(){
+  let itemClass = this.parentNode.className
+
+  for(i = 0; i < skillsContent.length; i++){
+    skillsContent[i].className = 'skills_content skills_close'
+  }
+  if (itemClass === 'skills_content skills_close') {
+    this.parentNode.className = 'skills_content skills_open'
+  }
+}
+
+skillsHeader.forEach((el) => {
+  el.addEventListener('click', toggleSkills)
+})
+
+/*==================== QUALIFICATION TABS ====================*/
+const tabs = document.querySelectorAll('[data-target]'),
+      tabContents = document.querySelectorAll('[data-content]')
+
+tabs.forEach(tab =>{
+  tab.addEventListener('click', () =>{
+    const target = document.querySelector(tab.dataset.target)
+
+    tabContents.forEach(tabContent =>{
+      tabContent.classList.remove('qualification_active')
+    })
+    target.classList.add('qualification_active')
+
+    Object.values(tab).forEach(tab =>{
+      tab.classList.remove('qualification_active')
+    })
+    tab.classList.add('qualification_active')
+  })
+})
+
+/*==================== SERVICES MODAL ====================*/
+const modalViews = document.querySelectorAll('.services_modal'),
+      modalBtns = document.querySelectorAll('.services_button'),
+      modalCloses = document.querySelectorAll('.services_modal-close')
+
+let modal = function(modalClick){
+  modalViews[modalClick].classList.add('active_modal')
+}
+
+modalBtns.forEach((modalBtn, i) => {
+  modalBtn.addEventListener('click', () => {
+    modal(i)
+  })
+})
+
+modalCloses.forEach((modalClose) => {
+  modalClose.addEventListener('click', () =>{
+    modalViews.forEach((modalView) => {
+      modalView.classList.remove('active_modal')
+    })
+  })
+})
+
+/*==================== PORTFOLIO SWIPER  ====================*/
+let swiperPortfolio = new Swiper('.portfolio_container', {
+  cssMode: true,
+  loop: true,
+
+  navigation: {
+    nextEl: '.swiper-button-next',
+    prevEl: '.swiper-button-prev',
+  },
+  pagination: {
+    el: '.swiper-pagination',
+    clickable: true,
   }
 });
-btn.on('click', function(e) {
-  e.preventDefault();
-  $('html, body').animate({scrollTop:0}, '500');
+
+/*==================== TESTIMONIAL ====================*/
+let swiperTestimonial = new Swiper('.testimonial_container', {
+  loop: true,
+  grabCursor: true,
+  spaceBetween: 48,
+
+  pagination: {
+    el: '.swiper-pagiantion',
+    clickable: true,
+    dynamicBullets: true
+  },
+
+  breakpoints:{
+    568:{
+      slidesPerView: 2,
+    }
+  }
 });
 
-    // testmonial
-    $('.testmonial-slider').owlCarousel({
-        autoplay:true,
-        autoplayTimeout:1500,
-        autoplayHoverPause:true,
-        loop: true,
-        responsiveClass: true,
-        nav: false,
-        dots: true,
-        smartSpeed: 700,
-        margin:30,
-        responsive: {
-            0: {
-                items: 1
-            },
-            600: {
-                items: 2
-            },
-            1000: {
-                items: 2
-            }
+/*==================== SCROLL SECTIONS ACTIVE LINK ====================*/
+const sections = document.querySelectorAll('section[id]')
+
+function scrollActive(){
+  const scrollY = window.pageYOffset 
+
+  sections.forEach(current =>{
+    const sectionHeight = current.offsetHeight,
+          sectionTop = current.offsetTop - 58,
+          sectionId = current.getAttribute('id')
+
+    if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
+      document.querySelector('.nav_menu a[href*=' + sectionId + ']').classList.add('active_link')
+    } else {
+      document.querySelector('.nav_menu a[href*=' + sectionId + ']').classList.remove('active_link')
+    }
+  })
+}
+window.addEventListener('scroll', scrollActive)
+
+/*==================== CHANGE BACKGROUND HEADER ====================*/ 
+function scrollHeader(){
+    const nav = document.getElementById('header')
+    if (this.scrollY >= 80) {
+      nav.classList.add('scroll_header');  
+    } else {
+      nav.classList.remove('scroll_header') 
+    }
+}
+window.addEventListener('scroll',scrollHeader)
+
+/*==================== SHOW SCROLL UP ====================*/ 
+function scrollUp(){
+  const scrollUp = document.getElementById('scroll-up')
+  if (this.scrollY >= 560) {
+    scrollUp.classList.add('show_scroll')
+  } else {
+    scrollUp.classList.remove('show_scroll')
+  }
+}
+window.addEventListener('scroll', scrollUp) 
+/*==================== DARK LIGHT THEME ====================*/ 
+const themeButton = document.getElementById('theme-button')
+const darkTheme = 'dark-theme'
+const iconTheme = 'uil-sun'
+
+//Previously selected topic(if user selected)
+const selectedTheme = localStorage.getItem('selected-theme')
+const selectedIcon = localStorage.getItem('selected-icon')
+
+const getCurrentTheme = () => document.body.classList.contains(darkTheme) ? 'dark' : 'light'
+const getCurrentIcon = () => themeButton.classList.contains(iconTheme) ? 'bx-moon' : 'bx-sun'
+
+if (selectedTheme) {
+  document.body.classList[selectedTheme === 'dark' ? 'add' : 'remove'](darkTheme)
+  themeButton.classList[selectedIcon === 'uil-moon' ? 'add' : 'remove'](iconTheme)
+}
+
+themeButton.addEventListener('click', () => {
+  document.body.classList.toggle(darkTheme)
+  themeButton.classList.toggle(iconTheme)
+  localStorage.setItem('selected-theme', getCurrentTheme())
+  localStorage.setItem('selected-icon', getCurrentIcon())
+})
+
+const text = document.querySelector(".sec-text");
+
+        const textLoad = () => {
+            setTimeout(() => {
+                text.textContent = "Web Developement";
+            }, 0);
+            setTimeout(() => {
+                text.textContent = "Android Developement";
+            }, 4000);
+            setTimeout(() => {
+                text.textContent = "UI/UX Designing";
+            }, 8000); //1s = 1000 milliseconds
         }
-    })
-    // Reveal animation
-    const sr = ScrollReveal({
-        origin: 'top',
-        distance: '90px',
-        duration: 2000,
-        reset: true
-    });
-    ScrollReveal().reveal('.social-icon, .feature-item, .progressbar-item, .services-block, .project-item, .form-item', { interval: 100 });
-    ScrollReveal().reveal('.sub-heading');
-    ScrollReveal().reveal('.col-right')
-    ScrollReveal().reveal('.heading', { delay: 100 });
-    ScrollReveal().reveal('.heading2', { delay: 200 });
-    ScrollReveal().reveal('.paragraph', { delay: 300 });
-    ScrollReveal().reveal('.btn-blk', { delay: 400 });
-    // About
-    ScrollReveal().reveal('.about-col-left');
-    ScrollReveal().reveal('.about-heading');
-    ScrollReveal().reveal('.about2', { delay: 100 });
-    ScrollReveal().reveal('.about3', { delay: 200 });
-    ScrollReveal().reveal('.about-btn-blk', { delay: 300 });
-    // CTA
-    ScrollReveal().reveal('.cta-inner', { delay: 100 })
-    ScrollReveal().reveal('.btn-outline', { delay: 200 });
-    // testmonail
-    ScrollReveal().reveal('.testmonial-slider');
-    // Contact form
-    ScrollReveal().reveal('.contact-inner');
 
-    var typed = new Typed(".typing-text", {
-        strings: ["Frontend development", "Backend development", "Web designing", "Android development", "UX Designing"],
-        loop: true,
-        typeSpeed: 50,
-        backSpeed: 25,
-        backDelay: 500,
-    });
-
-
- 
+        textLoad();
+        setInterval(textLoad, 12000);
