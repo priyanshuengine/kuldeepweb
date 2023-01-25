@@ -228,3 +228,5 @@ s0.parentNode.insertBefore(s1,s0);
 window.addEventListener('load',function(){
   document.querySelector('body').classList.add("loaded")  
 });
+
+
